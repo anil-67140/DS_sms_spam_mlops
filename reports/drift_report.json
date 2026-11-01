@@ -1,0 +1,119 @@
+{
+  "status": "alert",
+  "n_reference": 774,
+  "n_current": 300,
+  "features": {
+    "n_chars": {
+      "psi": 8.2696,
+      "ks_stat": 0.7119,
+      "ks_pvalue": 5.955370255711434e-107,
+      "status": "alert",
+      "ref_mean": 78.2855,
+      "cur_mean": 108.2667
+    },
+    "n_words": {
+      "psi": 8.5486,
+      "ks_stat": 0.5904,
+      "ks_pvalue": 7.832062514205771e-71,
+      "status": "alert",
+      "ref_mean": 15.2287,
+      "cur_mean": 15.0
+    },
+    "digit_ratio": {
+      "psi": 8.5208,
+      "ks_stat": 0.8915,
+      "ks_pvalue": 2.2155923938051733e-185,
+      "status": "alert",
+      "ref_mean": 0.0166,
+      "cur_mean": 0.0763
+    },
+    "upper_ratio": {
+      "psi": 8.2955,
+      "ks_stat": 0.8333,
+      "ks_pvalue": 2.0015743826548705e-155,
+      "status": "alert",
+      "ref_mean": 0.062,
+      "cur_mean": 0.0739
+    },
+    "punct_ratio": {
+      "psi": 8.3187,
+      "ks_stat": 0.8243,
+      "ks_pvalue": 2.95005204317263e-151,
+      "status": "alert",
+      "ref_mean": 0.0591,
+      "cur_mean": 0.0924
+    },
+    "exclaim_count": {
+      "psi": 1.1531,
+      "ks_stat": 0.1537,
+      "ks_pvalue": 6.22322156396495e-05,
+      "status": "alert",
+      "ref_mean": 0.2313,
+      "cur_mean": 0.0
+    },
+    "has_url": {
+      "psi": 12.9648,
+      "ks_stat": 0.9819,
+      "ks_pvalue": 3.1789292756791186e-251,
+      "status": "alert",
+      "ref_mean": 0.0181,
+      "cur_mean": 1.0
+    },
+    "has_phone": {
+      "psi": 0.5314,
+      "ks_stat": 0.0788,
+      "ks_pvalue": 0.12787513919416918,
+      "status": "alert",
+      "ref_mean": 0.0788,
+      "cur_mean": 0.0
+    },
+    "has_money": {
+      "psi": 11.661,
+      "ks_stat": 0.9535,
+      "ks_pvalue": 3.3266921222372177e-226,
+      "status": "alert",
+      "ref_mean": 0.0465,
+      "cur_mean": 1.0
+    },
+    "has_shortcode": {
+      "psi": 0.3441,
+      "ks_stat": 0.0543,
+      "ks_pvalue": 0.5259035540129299,
+      "status": "alert",
+      "ref_mean": 0.0543,
+      "cur_mean": 0.0
+    },
+    "oov_rate": {
+      "psi": 8.5315,
+      "ks_stat": 0.9393,
+      "ks_pvalue": 1.2056598991349087e-215,
+      "status": "alert",
+      "ref_mean": 0.1044,
+      "cur_mean": 0.3333
+    },
+    "score": {
+      "psi": 8.2931,
+      "ks_stat": 0.8953,
+      "ks_pvalue": 1.328203796745565e-187,
+      "status": "alert",
+      "ref_mean": 0.1219,
+      "cur_mean": 0.9429
+    }
+  },
+  "drifted_features": [
+    "n_chars",
+    "n_words",
+    "digit_ratio",
+    "upper_ratio",
+    "punct_ratio",
+    "exclaim_count",
+    "has_url",
+    "has_phone",
+    "has_money",
+    "has_shortcode",
+    "oov_rate",
+    "score"
+  ],
+  "spam_rate_reference": 0.11498708010335917,
+  "spam_rate_current": 1.0
+}

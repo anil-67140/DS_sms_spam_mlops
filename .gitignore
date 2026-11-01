@@ -1,0 +1,20 @@
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+# ML artefacts: tracked by DVC / registry, not by git
+data/raw/
+data/processed/
+data/feedback/
+checkpoints/
+models/versions/
+mlruns/
+mlflow.db
+logs/
+reports/figures/
+reports/*.csv
+reports/*.html
+.env
+kaggle.json

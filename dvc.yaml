@@ -1,0 +1,19 @@
+# Reproducible pipeline:  dvc init && dvc repro      (remote: `dvc remote add -d gdrive gdrive://<folder-id>`)
+stages:
+  prepare:
+    cmd: python -m spamguard.data
+    deps: [src/spamguard/data.py, src/spamguard/config.py]
+    params: [seed, data]
+    outs: [data/processed]
+  train:
+    cmd: python -m spamguard.train
+    deps: [src/spamguard, data/processed]
+    params: [seed, features, training, threshold, bootstrap]
+    outs: [models, checkpoints]
+    metrics: [reports/metrics.json: {cache: false}]
+    plots: [reports/leaderboard_full.csv]
+  monitor:
+    cmd: python -m spamguard.monitoring
+    deps: [src/spamguard/monitoring.py, reports/reference_features.csv]
+    params: [monitoring]
+    outs: [reports/drift_report.json: {cache: false}]

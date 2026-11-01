@@ -1,0 +1,17 @@
+services:
+  api:
+    build: .
+    ports: ["8000:8000"]          # API: /docs  UI: /ui  metrics: /metrics
+    environment:
+      SPAMGUARD_API_KEY: ${SPAMGUARD_API_KEY:-}   # set to require X-API-Key
+    volumes:
+      - ./models:/app/models:ro   # versioned model registry (read-only in prod)
+      - ./logs:/app/logs          # prediction logs (features, no raw text)
+      - ./data/feedback:/app/data/feedback
+      - ./reports:/app/reports    # drift reference + dashboards
+    restart: unless-stopped
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:latest
+    command: mlflow server --host 0.0.0.0 --port 5000 --backend-store-uri sqlite:///mlflow.db --default-artifact-root /mlflow
+    ports: ["5000:5000"]
+    volumes: ["./mlflow-data:/mlflow"]

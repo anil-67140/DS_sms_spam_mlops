@@ -1,0 +1,7 @@
+attack,spam_recall,mean_spam_score
+clean (baseline),0.8854,0.9171
+leetspeak,0.9375,0.9624
+letter spacing,0.8854,0.9149
+zero-width chars,0.8542,0.9026
+random caps,0.8854,0.9183
+punctuation noise,0.8542,0.8993

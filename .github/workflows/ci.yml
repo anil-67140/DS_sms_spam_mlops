@@ -1,0 +1,48 @@
+name: CI-CD
+on:
+  push: { branches: [main], tags: ["v*"] }
+  pull_request:
+permissions: { contents: read, packages: write }
+jobs:
+  lint-test:
+    runs-on: ubuntu-latest
+    strategy: { matrix: { python: ["3.11", "3.12"] } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "${{ matrix.python }}", cache: pip }
+      - run: pip install -r requirements-dev.txt && pip install -e . --no-deps
+      - run: ruff check src tests
+      - run: pytest -q --cov=spamguard --cov-fail-under=70
+  smoke-train:           # proves the whole pipeline (train -> register -> serve) works on the bundled sample
+    needs: lint-test
+    runs-on: ubuntu-latest
+    env: { SPAMGUARD_HOME: "${{ github.workspace }}/.run" }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12", cache: pip }
+      - run: pip install -r requirements.txt && pip install -e . --no-deps
+      - run: python -m spamguard.train --fast --no-mlflow --models multinomial_nb,logistic_regression,linear_svm --source local --local-path data/sample/spam.csv
+      - run: python -c "from fastapi.testclient import TestClient; from spamguard.api import create_app; c=TestClient(create_app(enable_ui=False)); c.__enter__(); r=c.post('/predict',json={'text':'WINNER claim free prize call 09061701461'}); print(r.json()); assert r.json()['label']=='spam'"
+      - uses: actions/upload-artifact@v4
+        with: { name: smoke-reports, path: ".run/reports" }
+  docker:
+    needs: lint-test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        if: startsWith(github.ref, 'refs/tags/v')
+        with: { registry: ghcr.io, username: "${{ github.actor }}", password: "${{ secrets.GITHUB_TOKEN }}" }
+      - uses: docker/metadata-action@v5
+        id: meta
+        with: { images: "ghcr.io/${{ github.repository }}" }
+      - uses: docker/build-push-action@v6        # CD: image is pushed only on version tags (v1.2.3)
+        with:
+          context: .
+          push: ${{ startsWith(github.ref, 'refs/tags/v') }}
+          tags: ${{ steps.meta.outputs.tags }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

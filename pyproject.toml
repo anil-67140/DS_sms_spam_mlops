@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "spamguard"
+version = "1.0.0"
+description = "Production-grade SMS spam detection: leakage-safe training, 16-model benchmark, FastAPI/Gradio serving, drift monitoring, feedback-driven retraining"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "numpy>=1.26", "pandas>=2.1", "scipy>=1.11", "scikit-learn>=1.5,<1.10", "joblib>=1.3",
+  "matplotlib>=3.8", "tabulate>=0.9", "pyyaml>=6", "nltk>=3.8",
+  "xgboost>=2.0", "lightgbm>=4.0",
+  "fastapi>=0.110", "uvicorn[standard]>=0.29", "pydantic>=2.6", "gradio>=4.30",
+  "mlflow>=2.12", "evidently>=0.6", "kaggle>=1.6",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "pytest-cov>=5", "httpx>=0.27", "ruff>=0.5", "dvc>=3.50"]
+
+[project.scripts]
+spamguard-train = "spamguard.train:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src", "."]
+filterwarnings = ["ignore::UserWarning", "ignore::FutureWarning", "ignore::DeprecationWarning"]
+
+[tool.ruff]
+line-length = 130
+target-version = "py310"
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+ignore = ["E501", "E701", "E702", "E731", "B008", "UP037", "UP006", "UP007", "UP035", "UP045", "E741", "I001", "B905", "B904"]

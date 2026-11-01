@@ -1,0 +1,51 @@
+# Single source of truth for every tunable. Tracked by DVC: changing a value re-runs only affected stages.
+seed: 42
+
+data:
+  source: uci               # uci | multilingual | local   (uci = recommended benchmark)
+  local_path: null          # used when source == local
+  fallback_to_sample: false # CI/offline only: use data/sample/spam.csv if Kaggle is unreachable
+  val_size: 0.15
+  test_size: 0.15
+  max_chars: 1000
+
+features:
+  word_ngram: [1, 2]
+  word_max_features: 20000
+  char_ngram: [2, 4]        # char n-grams make the model robust to obfuscation ("fr33", "w1n")
+  char_max_features: 30000
+  min_df: 2
+  stem: false
+  stop_words: null          # keep "u", "ur", "to" ... they are strong SMS-spam signals
+  use_char: true
+  use_handcrafted: true
+
+training:
+  models: all               # or a list, e.g. [multinomial_nb, logistic_regression, linear_svm]
+  cv_folds: 3
+  n_iter: 6                 # random-search budget for light models
+  heavy_n_iter: 3           # random-search budget for RF / ET / SVM / boosting / ensembles
+  scoring: average_precision
+  n_jobs: -1
+  calibrate_champion: true
+
+threshold:
+  strategy: min_precision   # min_precision | max_fbeta | max_f1 | min_cost
+  min_precision: 0.99       # <=1% of flagged messages may be legitimate ("false spam" is the costly error)
+  beta: 0.5
+  cost_fp: 5.0
+  cost_fn: 1.0
+  use_oof: true
+
+bootstrap:
+  n: 1000
+
+monitoring:
+  psi_warn: 0.1
+  psi_alert: 0.25
+  min_samples: 100
+
+retrain:
+  min_feedback: 50
+  min_pr_auc_delta: -0.002
+  max_fpr_increase: 0.005
